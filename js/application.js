@@ -1,5 +1,7 @@
 let Game = function() {
   this.score = 0;
+  this.gameStart = false;
+
   this.newOperation = function() {
     let n1 = _.random(1, 10);
     let n2 = _.random(1, 10);
@@ -26,6 +28,10 @@ $(document).on("keypress", function(e) {
       game.increaseScore();
       $("#current-score").html(game.score);
       game.newOperation();
+      timeLeft++;
+      display = $("#sec-left");
+
+      display.text(timeLeft);
     }
   }
 });
@@ -36,6 +42,49 @@ $(document).ready(function() {
   res = game.newOperation();
 
   $("#result").focus();
+  $("#result").on("keyup", function() {
+    startGame();
+  });
 });
 
-game = new Game();
+var initGame = function() {
+  game = new Game();
+};
+
+var timeLeft = 10;
+var interval;
+var startGame = function() {
+  if (!interval) {
+    interval = setInterval(function() {
+      timeLeft--;
+      display = $("#sec-left");
+      display.text(timeLeft);
+
+      if (timeLeft === 0) {
+        display.text("0");
+        $("#result").prop("disabled", true);
+        clearInterval(interval);
+        interval = undefined;
+        if (game.score > HIGHEST) {
+          HIGHEST = game.score;
+          $("#high-score").text(HIGHEST);
+        }
+      }
+    }, 1000);
+  }
+};
+
+initGame();
+
+var playAgain = function() {
+  $("#result").focus();
+  $("#result").val("");
+  $("#result").prop("disabled", false);
+  initGame();
+  game.newOperation();
+  $("#current-score").text(0);
+  timeLeft = 10;
+  display = $("#sec-left");
+
+  display.text(timeLeft);
+};
