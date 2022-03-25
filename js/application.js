@@ -1,4 +1,5 @@
 let Game = function() {
+  this.score = 0;
   this.newOperation = function() {
     let n1 = _.random(1, 10);
     let n2 = _.random(1, 10);
@@ -9,19 +10,23 @@ let Game = function() {
     $("#n2").html(n2);
   };
   this.evaluateResult = function(answer) {
-    if (answer === this.res) {
-      console.log("correct");
-    } else {
-      console.log("wrong");
-    }
+    return answer === this.res;
+  };
+  this.increaseScore = function() {
+    this.score++;
   };
 };
 
 $(document).on("keypress", function(e) {
   if (e.which === 13) {
     resultInput = $("#result");
-    game.evaluateResult(parseInt(resultInput.val()));
+    correct = game.evaluateResult(parseInt(resultInput.val()));
     resultInput.val("");
+    if (correct) {
+      game.increaseScore();
+      $("#current-score").html(game.score);
+      game.newOperation();
+    }
   }
 });
 
