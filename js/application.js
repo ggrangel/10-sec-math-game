@@ -1,12 +1,31 @@
-let Game = function() {
+let Game = function(maxN) {
   this.score = 0;
   this.gameStart = false;
+  this.maxN = maxN;
 
   this.newOperation = function() {
-    let n1 = _.random(1, 10);
-    let n2 = _.random(1, 10);
+    let op = _.sample(["+", "-", "*", "/"]);
+    $("#operation").html(op);
+    var n1 = _.random(1, this.maxN);
 
-    this.res = n1 + n2;
+    switch (op) {
+      case "+":
+        var n2 = _.random(1, this.maxN);
+        this.res = n1 + n2;
+        break;
+      case "-":
+        var n2 = _.random(0, n1 - 1);
+        this.res = n1 - n2;
+        break;
+      case "*":
+        var n2 = _.random(1, this.maxN);
+        this.res = n1 * n2;
+        break;
+      case "/":
+        var n2 = _.random(1, n1);
+        this.res = parseInt(n1 / n2);
+        break;
+    }
 
     $("#n1").html(n1);
     $("#n2").html(n2);
@@ -47,14 +66,15 @@ $(document).ready(function() {
   });
 });
 
-var initGame = function() {
-  game = new Game();
+var initGame = function(maxN) {
+  game = new Game(maxN);
 };
 
 var timeLeft = 10;
 var interval;
 var startGame = function() {
   if (!interval) {
+    $("#maxNumber").prop("disabled", true);
     interval = setInterval(function() {
       timeLeft--;
       display = $("#sec-left");
@@ -63,6 +83,7 @@ var startGame = function() {
       if (timeLeft === 0) {
         display.text("0");
         $("#result").prop("disabled", true);
+        $("#maxNumber").prop("disabled", false);
         clearInterval(interval);
         interval = undefined;
         if (game.score > HIGHEST) {
@@ -74,17 +95,24 @@ var startGame = function() {
   }
 };
 
-initGame();
+initGame(10);
 
 var playAgain = function() {
   $("#result").focus();
   $("#result").val("");
   $("#result").prop("disabled", false);
-  initGame();
+  // $("#maxNumber").prop("disabled", true);
+  initGame($("#maxNumber").val());
   game.newOperation();
   $("#current-score").text(0);
   timeLeft = 10;
   display = $("#sec-left");
 
   display.text(timeLeft);
+};
+
+var rangeUpdate = function() {
+  maxN = $("#maxNumber").val();
+  game.maxN = maxN;
+  $("#lblMaxN").html(maxN);
 };

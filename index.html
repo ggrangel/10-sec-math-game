@@ -34,7 +34,7 @@
           <h2 class="d-inline ml-2">secs left</h2>
           <div></div>
           <h2 class="d-inline" id="n1">8</h2>
-          <h2 class="d-inline">+</h2>
+          <h2 class="d-inline" id="operation">+</h2>
           <h2 class="d-inline" id="n2">5</h2>
           <input class="d-block" type="text" name="result" id="result" />
           <button type="btn" onclick="playAgain()">Restart</button>
@@ -45,6 +45,18 @@
           <div class="my-3"></div>
           <h3 class="d-inline">Highest score:</h3>
           <h3 class="d-inline" id="high-score">0</h3>
+        </div>
+        <div class="col-12">
+          <label for="customRange2" class="form-label">Max number</label>
+          <input
+            type="range"
+            min="10"
+            max="99"
+            id="maxNumber"
+            value="10"
+            oninput="rangeUpdate()"
+          />
+          <label class="form-label" id="lblMaxN">10</label>
         </div>
       </div>
     </div>
